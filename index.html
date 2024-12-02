@@ -10,7 +10,7 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <style type="text/css">
+    <style>
         .form-inline input[type='color'].form-control {
             width: 6em;
         }
@@ -18,47 +18,42 @@
 </head>
 <body id='index_page'>
 <div id='wrapper' class="container">
-    <div class="row">
-
-    </div>
+    <div class="row"></div>
     <div class="row">
         <div class="col d-flex justify-content-center">
             <canvas id="canvas" width="128" height="128"></canvas>
         </div>
     </div>
     <form id='form'>
-        <div class="">
+        <div>
             <label for="input_text" class="form-label">入力</label>
             <input type='text' id='input_text' value='よんもじ' class="form-control"/>
         </div>
-
-        <div class=" ">
+        <div>
             <label for="input_font" class="form-label">フォント</label>
             <input type='text' id='input_font' value='sans-serif' class="form-control"/>
         </div>
-        <div class="">
+        <div>
             <label for="input_color" class="form-label">文字色</label>
             <input type='color' id='input_color' value='#1111dd' class="form-control form-control-color"/>
         </div>
-
         <div class="form-check">
-            <input type='checkbox' id='input_background' name='border' class="form-check-input" aria-label="Checkbox for following text input"/>
+            <input type='checkbox' id='input_background' name='background' class="form-check-input" aria-label="Checkbox for following text input"/>
             <label for="input_background" class="form-label">背景を有効化</label>
         </div>
-        <div class="">
+        <div>
             <label for="input_background_color" class="form-label">背景色</label>
             <input type='color' id='input_background_color' value='#1111dd' class="form-control form-control-color"/>
         </div>
-
         <div class="form-check">
             <input type='checkbox' id='input_border' name='border' class="form-check-input" aria-label="Checkbox for following text input"/>
             <label for="input_border" class="form-label">ボーダーを有効化</label>
         </div>
-        <div class="">
+        <div>
             <label for="input_border_color" class="form-label">ボーダー色</label>
             <input type='color' id='input_border_color' value='#1111dd' class="form-control form-control-color"/>
         </div>
-        <div class="">
+        <div>
             <label for="input_border_size" class="form-label">ボーダーサイズ</label>
             <input type='number' id='input_border_size' value='1' class="form-control"/>
         </div>
@@ -71,10 +66,11 @@
 </div>
 <div id="script">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" charset="UTF-8">
-        (function () {
-            var canvas2d = document.getElementById('canvas').getContext('2d');
-            var onChange = function () {
+    <script>
+        $(function () {
+            const canvas2d = document.getElementById('canvas').getContext('2d');
+
+            const onChange = () => {
                 draw(
                     $('#input_text').val(),
                     'bold 64px ' + $('#input_font').val(),
@@ -83,71 +79,62 @@
                     $('#input_background_color').val(),
                     $('#input_border').prop('checked'),
                     $('#input_border_color').val(),
-                    $('#input_border_size').val(),
-                    $('#input_shadow').prop('checked'),
-                    $('#input_shadow_color').val(),
-                    $('#input_shadow_size').val());
+                    $('#input_border_size').val()
+                );
                 save();
             };
-            var draw = function (str, font, color, bg, bgColor, border, borderColor, borderSize, shadow, shadowColor, shadowSize) {
-                var margin = 2;
+
+            const draw = (str, font, color, bg, bgColor, border, borderColor, borderSize) => {
                 canvas2d.font = font;
                 if (bg) {
                     canvas2d.fillStyle = bgColor;
                     canvas2d.fillRect(0, 0, 128, 128);
-                }else{
+                } else {
                     canvas2d.clearRect(0, 0, 128, 128);
                 }
                 if (border) {
                     canvas2d.strokeStyle = borderColor;
                     canvas2d.lineWidth = borderSize;
-                    canvas2d.strokeText(str.charAt(0), 2, 58, 64);
-                    canvas2d.strokeText(str.charAt(1), 62, 58, 64);
-                    canvas2d.strokeText(str.charAt(2), 2, 122, 64);
-                    canvas2d.strokeText(str.charAt(3), 62, 122, 64);
+                    [0, 1, 2, 3].forEach(i => {
+                        canvas2d.strokeText(str.charAt(i), (i % 2) * 60 + 2, (Math.floor(i / 2)) * 64 + 58, 64);
+                    });
                 }
                 canvas2d.fillStyle = color;
-                canvas2d.fillText(str.charAt(0), 2, 58, 64);
-                canvas2d.fillText(str.charAt(1), 62, 58, 64);
-                canvas2d.fillText(str.charAt(2), 2, 122, 64);
-                canvas2d.fillText(str.charAt(3), 62, 122, 64);
-            }
-            var load = function () {
-                $.each(['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size', 'shadow', 'shadow_color', 'shadow_size'], function (index, key) {
-                    var val = urlParams(key);
+                [0, 1, 2, 3].forEach(i => {
+                    canvas2d.fillText(str.charAt(i), (i % 2) * 60 + 2, (Math.floor(i / 2)) * 64 + 58, 64);
+                });
+            };
+
+            const load = () => {
+                const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
+                keys.forEach(key => {
+                    const val = urlParams(key);
                     if (val) {
                         $('#input_' + key).val(val);
                     }
                 });
-            }
-            var save = function () {
-                var search = '?'
-                $.each(['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size', 'shadow', 'shadow_color', 'shadow_size'], function (index, key) {
-                    var val = $('#input_' + key).val();
+            };
+
+            const save = () => {
+                const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
+                let search = '?';
+                keys.forEach(key => {
+                    const val = $('#input_' + key).val();
                     search = search + '&' + key + '=' + encodeURIComponent(val);
                 });
                 history.replaceState('', null, search.replace('?&', '?'));
-            }
-            var urlParams = function (key) {
-                var ret = undefined;
-                var match = location.search.match(new RegExp(key + '=(.*?)(&|$)'));
-                if (match) {
-                    ret = decodeURIComponent(match[1]);
-                }
-                return ret;
             };
 
-            $(function () {
-                $('input').on('keyup change', onChange);
-                load();
-                onChange();
-            });
-        })();
+            const urlParams = key => {
+                const match = location.search.match(new RegExp(key + '=(.*?)(&|$)'));
+                return match ? decodeURIComponent(match[1]) : undefined;
+            };
 
+            $('input').on('keyup change', onChange);
+            load();
+            onChange();
+        });
     </script>
 </div>
 </body>
 </html>
-
-
-
