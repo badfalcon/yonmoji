@@ -1,21 +1,23 @@
-$(function () {
-    const canvas2d = document.getElementById('canvas').getContext('2d');
+document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('canvas');
+    const canvas2d = canvas.getContext('2d');
+    const inputs = document.querySelectorAll('#form input');
 
-    const onChange = () => {
+    function onChange() {
         draw(
-            $('#input_text').val(),
-            'bold 64px ' + $('#input_font').val(),
-            $('#input_color').val(),
-            $('#input_background').prop("checked"),
-            $('#input_background_color').val(),
-            $('#input_border').prop('checked'),
-            $('#input_border_color').val(),
-            $('#input_border_size').val()
+            document.getElementById('input_text').value,
+            'bold 64px ' + document.getElementById('input_font').value,
+            document.getElementById('input_color').value,
+            document.getElementById('input_background').checked,
+            document.getElementById('input_background_color').value,
+            document.getElementById('input_border').checked,
+            document.getElementById('input_border_color').value,
+            document.getElementById('input_border_size').value
         );
         save();
-    };
+    }
 
-    const draw = (str, font, color, bg, bgColor, border, borderColor, borderSize) => {
+    function draw(str, font, color, bg, bgColor, border, borderColor, borderSize) {
         canvas2d.font = font;
         if (bg) {
             canvas2d.fillStyle = bgColor;
@@ -26,42 +28,45 @@ $(function () {
         if (border) {
             canvas2d.strokeStyle = borderColor;
             canvas2d.lineWidth = borderSize;
-            [0, 1, 2, 3].forEach(i => {
-                canvas2d.strokeText(str.charAt(i), (i % 2) * 60 + 2, (Math.floor(i / 2)) * 64 + 58, 64);
-            });
+            for (let i = 0; i < 4; i++) {
+                canvas2d.strokeText(str.charAt(i), (i % 2) * 60 + 2, Math.floor(i / 2) * 64 + 58);
+            }
         }
         canvas2d.fillStyle = color;
-        [0, 1, 2, 3].forEach(i => {
-            canvas2d.fillText(str.charAt(i), (i % 2) * 60 + 2, (Math.floor(i / 2)) * 64 + 58, 64);
-        });
-    };
+        for (let i = 0; i < 4; i++) {
+            canvas2d.fillText(str.charAt(i), (i % 2) * 60 + 2, Math.floor(i / 2) * 64 + 58);
+        }
+    }
 
-    const load = () => {
+    function load() {
         const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
         keys.forEach(key => {
             const val = urlParams(key);
             if (val) {
-                $('#input_' + key).val(val);
+                document.getElementById('input_' + key).value = val;
             }
         });
-    };
+    }
 
-    const save = () => {
+    function save() {
         const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
         let search = '?';
         keys.forEach(key => {
-            const val = $('#input_' + key).val();
-            search = search + '&' + key + '=' + encodeURIComponent(val);
+            const val = document.getElementById('input_' + key).value;
+            search += '&' + key + '=' + encodeURIComponent(val);
         });
         history.replaceState('', null, search.replace('?&', '?'));
-    };
+    }
 
-    const urlParams = key => {
+    function urlParams(key) {
         const match = location.search.match(new RegExp(key + '=(.*?)(&|$)'));
         return match ? decodeURIComponent(match[1]) : undefined;
-    };
+    }
 
-    $('input').on('keyup change', onChange);
+    inputs.forEach(input => {
+        input.addEventListener('input', onChange);
+    });
+
     load();
     onChange();
 });
