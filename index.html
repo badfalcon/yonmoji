@@ -6,15 +6,8 @@
     <title>よんもじ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-    <style>
-        .form-inline input[type='color'].form-control {
-            width: 6em;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body id='index_page'>
 <div id='wrapper' class="container">
@@ -38,7 +31,7 @@
             <input type='color' id='input_color' value='#1111dd' class="form-control form-control-color"/>
         </div>
         <div class="form-check">
-            <input type='checkbox' id='input_background' name='background' class="form-check-input" aria-label="Checkbox for following text input"/>
+            <input type='checkbox' id='input_background' name='background' class="form-check-input" />
             <label for="input_background" class="form-label">背景を有効化</label>
         </div>
         <div>
@@ -46,7 +39,7 @@
             <input type='color' id='input_background_color' value='#1111dd' class="form-control form-control-color"/>
         </div>
         <div class="form-check">
-            <input type='checkbox' id='input_border' name='border' class="form-check-input" aria-label="Checkbox for following text input"/>
+            <input type='checkbox' id='input_border' name='border' class="form-check-input" />
             <label for="input_border" class="form-label">ボーダーを有効化</label>
         </div>
         <div>
@@ -64,77 +57,7 @@
         </div>
     </div>
 </div>
-<div id="script">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script>
-        $(function () {
-            const canvas2d = document.getElementById('canvas').getContext('2d');
-
-            const onChange = () => {
-                draw(
-                    $('#input_text').val(),
-                    'bold 64px ' + $('#input_font').val(),
-                    $('#input_color').val(),
-                    $('#input_background').prop("checked"),
-                    $('#input_background_color').val(),
-                    $('#input_border').prop('checked'),
-                    $('#input_border_color').val(),
-                    $('#input_border_size').val()
-                );
-                save();
-            };
-
-            const draw = (str, font, color, bg, bgColor, border, borderColor, borderSize) => {
-                canvas2d.font = font;
-                if (bg) {
-                    canvas2d.fillStyle = bgColor;
-                    canvas2d.fillRect(0, 0, 128, 128);
-                } else {
-                    canvas2d.clearRect(0, 0, 128, 128);
-                }
-                if (border) {
-                    canvas2d.strokeStyle = borderColor;
-                    canvas2d.lineWidth = borderSize;
-                    [0, 1, 2, 3].forEach(i => {
-                        canvas2d.strokeText(str.charAt(i), (i % 2) * 60 + 2, (Math.floor(i / 2)) * 64 + 58, 64);
-                    });
-                }
-                canvas2d.fillStyle = color;
-                [0, 1, 2, 3].forEach(i => {
-                    canvas2d.fillText(str.charAt(i), (i % 2) * 60 + 2, (Math.floor(i / 2)) * 64 + 58, 64);
-                });
-            };
-
-            const load = () => {
-                const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
-                keys.forEach(key => {
-                    const val = urlParams(key);
-                    if (val) {
-                        $('#input_' + key).val(val);
-                    }
-                });
-            };
-
-            const save = () => {
-                const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
-                let search = '?';
-                keys.forEach(key => {
-                    const val = $('#input_' + key).val();
-                    search = search + '&' + key + '=' + encodeURIComponent(val);
-                });
-                history.replaceState('', null, search.replace('?&', '?'));
-            };
-
-            const urlParams = key => {
-                const match = location.search.match(new RegExp(key + '=(.*?)(&|$)'));
-                return match ? decodeURIComponent(match[1]) : undefined;
-            };
-
-            $('input').on('keyup change', onChange);
-            load();
-            onChange();
-        });
-    </script>
-</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
