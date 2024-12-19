@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function onChange() {
         draw(
             document.getElementById('input_text').value,
-            'bold 64px ' + document.getElementById('input_font').value,
+            'bold 63px ' + document.getElementById('input_font').value,
             document.getElementById('input_color').value,
             document.getElementById('input_background').checked,
             document.getElementById('input_background_color').value,
@@ -23,14 +23,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function draw(str, font, color, bg, bgColor, bgRadius, border, borderColor, borderSize, translateX, translateY) {
         canvas2d.resetTransform();
         canvas2d.clearRect(0, 0, 128, 128);
-        canvas2d.translate(translateX, translateY*-1);
-        canvas2d.font = font;
         if (bg) {
             canvas2d.fillStyle = bgColor;
-            canvas2d.roundRect(0, 0, 128, 128, bgRadius);
+            canvas2d.roundRect(1, 1, 126, 126, bgRadius);
             canvas2d.fill();
         } else {
-            canvas2d.clearRect(0, 0, 128, 128);
+            canvas2d.clearRect(1, 1, 126, 126);
         }
         if (border) {
             canvas2d.strokeStyle = borderColor;
@@ -39,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 canvas2d.strokeText(str.charAt(i), (i % 2) * 60 + 2, Math.floor(i / 2) * 64 + 58);
             }
         }
+        canvas2d.translate(translateX, translateY * -1);
+        canvas2d.font = font;
         canvas2d.fillStyle = color;
         for (let i = 0; i < 4; i++) {
             canvas2d.fillText(str.charAt(i), (i % 2) * 60 + 2, Math.floor(i / 2) * 64 + 58);
