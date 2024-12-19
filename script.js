@@ -50,7 +50,14 @@ document.addEventListener('DOMContentLoaded', function () {
         keys.forEach(key => {
             const val = urlParams(key);
             if (val) {
-                document.getElementById('input_' + key).value = val;
+                let input = document.getElementById('input_' + key);
+                switch (input.type) {
+                    case 'checkbox':
+                        input.checked = val === 'true';
+                        break;
+                    default:
+                        input.value = val;
+                }
             }
         });
     }
@@ -59,8 +66,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const keys = ['text', 'font', 'color', 'background', 'background_color', 'background_radius', 'border', 'border_color', 'border_size', 'translate_x', 'translate_y'];
         let search = '?';
         keys.forEach(key => {
-            const val = document.getElementById('input_' + key).value;
-            search += '&' + key + '=' + encodeURIComponent(val);
+            const input = document.getElementById('input_' + key);
+            switch (input.type) {
+                case 'checkbox':
+                    search += '&' + key + '=' + input.checked;
+                    break;
+                default:
+                    const val = input.value;
+                    search += '&' + key + '=' + encodeURIComponent(val);
+            }
         });
         history.replaceState('', null, search.replace('?&', '?'));
     }
