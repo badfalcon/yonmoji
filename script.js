@@ -10,18 +10,25 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('input_color').value,
             document.getElementById('input_background').checked,
             document.getElementById('input_background_color').value,
+            document.getElementById('input_background_radius').value,
             document.getElementById('input_border').checked,
             document.getElementById('input_border_color').value,
-            document.getElementById('input_border_size').value
+            document.getElementById('input_border_size').value,
+            document.getElementById('input_translate_x').value || 0,
+            document.getElementById('input_translate_y').value || 0,
         );
         save();
     }
 
-    function draw(str, font, color, bg, bgColor, border, borderColor, borderSize) {
+    function draw(str, font, color, bg, bgColor, bgRadius, border, borderColor, borderSize, translateX, translateY) {
+        canvas2d.resetTransform();
+        canvas2d.clearRect(0, 0, 128, 128);
+        canvas2d.translate(translateX, translateY*-1);
         canvas2d.font = font;
         if (bg) {
             canvas2d.fillStyle = bgColor;
-            canvas2d.fillRect(0, 0, 128, 128);
+            canvas2d.roundRect(0, 0, 128, 128, bgRadius);
+            canvas2d.fill();
         } else {
             canvas2d.clearRect(0, 0, 128, 128);
         }
@@ -39,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function load() {
-        const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
+        const keys = ['text', 'font', 'color', 'background', 'background_color', 'background_radius', 'border', 'border_color', 'border_size', 'translate_x', 'translate_y'];
         keys.forEach(key => {
             const val = urlParams(key);
             if (val) {
@@ -49,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function save() {
-        const keys = ['text', 'font', 'color', 'background', 'background_color', 'border', 'border_color', 'border_size'];
+        const keys = ['text', 'font', 'color', 'background', 'background_color', 'background_radius', 'border', 'border_color', 'border_size', 'translate_x', 'translate_y'];
         let search = '?';
         keys.forEach(key => {
             const val = document.getElementById('input_' + key).value;

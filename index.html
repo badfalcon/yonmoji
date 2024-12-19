@@ -38,6 +38,10 @@
             <label for="input_background_color" class="form-label">背景色</label>
             <input type='color' id='input_background_color' value='#1111dd' class="form-control form-control-color"/>
         </div>
+        <div>
+            <label for="input_background_radius" class="form-label">角丸</label>
+            <input type='number' id='input_background_radius' value='0' class="form-control"/>
+        </div>
         <div class="form-check">
             <input type='checkbox' id='input_border' name='border' class="form-check-input" />
             <label for="input_border" class="form-label">ボーダーを有効化</label>
@@ -49,6 +53,17 @@
         <div>
             <label for="input_border_size" class="form-label">ボーダーサイズ</label>
             <input type='number' id='input_border_size' value='1' class="form-control"/>
+        </div>
+<!--        角丸-->
+        <div>
+            <!-- x移動 -->
+            <label for="input_translate_x" class="form-label">x移動</label>
+            <input type='number' id='input_translate_x' value='0' step="0.1" class="form-control"/>
+        </div>
+        <div>
+            <!-- y移動 -->
+            <label for="input_translate_y" class="form-label">y移動</label>
+            <input type='number' id='input_translate_y' value='0' step="0.1" class="form-control"/>
         </div>
     </form>
     <div class="row">
